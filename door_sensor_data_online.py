@@ -42,7 +42,7 @@ def distance():
 
 def setup_google_sheets():
     scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-    creds = Credentials.from_service_account_file('path/to/your/json/credentials/file.json', scopes=scope)
+    creds = Credentials.from_service_account_file('/path/to/your/json/credentials/file.json', scopes=scope)
     client = gspread.authorize(creds)
     sheet = client.open("Distance measurements").sheet1
     return sheet
@@ -55,6 +55,10 @@ def write_to_csv_and_google(sheet, index, date_time, milliseconds, detections):
     
     # Write to Google Sheets
     sheet.append_row([index, date_time, milliseconds, detections])
+
+def log_line_count(sheet, count):
+    sheet.update('G1', f'Line count: {count}')
+    sheet.append_row([datetime.now().strftime("%Y-%m-%d %H:%M:%S"), count])
 
 def main():
     people_count = 0
@@ -93,7 +97,14 @@ def main():
             if dist < 100:  # Assuming an object is detected within 100 cm
                 detections_within_interval += 1
             
-            time.sleep(0.05)  # Short sleep to reduce CPU load
+            # Log line count to Google Sheets
+            with open('people_log.csv', 'r') as f:
+                reader = csv.reader(f)
+                data = list(reader)
+                line_count = len(data) - 1  # Exclude the header row
+            log_line_count(sheet, line_count)
+
+            time.sleep(1)  # Adjust the sleep interval if needed
     
     except KeyboardInterrupt:
         print("Measurement stopped by User")
@@ -101,3 +112,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
