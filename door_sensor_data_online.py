@@ -3,7 +3,7 @@ import time
 import csv
 from datetime import datetime
 import gspread
-from oauth2client.service_account import ServiceAccountCredentials
+from google.oauth2.service_account import Credentials
 
 # Set GPIO Pins
 GPIO_TRIGGER = 23
@@ -42,7 +42,7 @@ def distance():
 
 def setup_google_sheets():
     scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-    creds = ServiceAccountCredentials.from_json_keyfile_name('path/to/your/json/credentials/file.json', scope)
+    creds = Credentials.from_service_account_file('path/to/your/json/credentials/file.json', scopes=scope)
     client = gspread.authorize(creds)
     sheet = client.open("Distance measurements").sheet1
     return sheet
