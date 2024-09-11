@@ -1,0 +1,24 @@
+import numpy as np
+import pandas as pd
+import xlrd
+
+# Connecting to MySQL Database
+conn = sqlite3.connect("database_name")
+c = conn.cursor()
+
+c.execute(
+    """
+    SELECT
+    *
+    FROM table_name
+    """
+)
+with open ('test.csv', 'r') as f:
+    reader = csv.reader(f)
+    columns = next(reader)
+    query = 'insert into MyTable({0}) values ({1})'
+    query = query.format(','.join(columns), ','.join('?' * len(columns)))
+    cursor = connection.cursor()
+    for data in reader:
+        cursor.execute(query, data)
+    cursor.commit()
