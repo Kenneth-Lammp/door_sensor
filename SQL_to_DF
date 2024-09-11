@@ -1,0 +1,53 @@
+import sqlite3
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+import random
+
+#conn = sqlite3.connect("database_name")
+#c = conn.cursor()
+
+#c.execute(
+#    """
+#    SELECT
+#    *
+#    FROM table_name
+#    """
+#)
+
+#df = pd.DataFrame(c.fetchall(), columns=["name_one", "name_two", "name_three"])
+np.random.seed(78999)
+#random.seed(90897)
+data = {'date': pd.bdate_range('2020-09-21', freq='h', periods=11000).tolist(),
+        'x': np.random.randint(10, size=(11000))}
+df = pd.DataFrame(data)
+#setting bins for each hour of the day
+bins = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+label = ['00:00-00:59', '01:00-1:59', '02:00-02:59', '03:00-03:59', '04:00-04:59', '05:00-05:59', '06:00-06:59', '07:00-07:59', '08:00-08:59', '09:00-10:00']
+#count number of entry in each bin, and save it as series
+df['Time Bin'] = pd.cut(df.date.dt.hour, bins, labels=label, right=False)
+df['Time Bin'].value_counts()
+values = df['Time Bin'].value_counts()
+#take a user input to determine what filters to apply for dictionary
+
+#test to change bins to dictionary from dataframe to filter
+bincnt = values.to_dict()
+#add something to filter dictionary
+res = dict((k, bincnt[k]) for k in ['00:00-00:59', '01:00-1:59', '02:00-02:59', '03:00-03:59', '04:00-04:59', '05:00-05:59', '06:00-06:59', '07:00-07:59', '08:00-08:59', '09:00-10:00']
+           if k in bincnt)
+#possibly add a option for either pie chart or histogram based on user input
+
+#prints a pie chart based off of restricted disctionary
+plt.pie(res.values(), labels=res.keys())
+#function to save piechart and print out path to image file for export purposes
+fname = 'fname.png'
+plt.savefig(fname)
+plt.show()
+print(df)
+print(values)
+print(res)
+import os
+if os.path.exists(fname):
+    print(os.path.abspath(fname))
+else:
+    print("file not found")
