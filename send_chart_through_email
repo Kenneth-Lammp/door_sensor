@@ -1,0 +1,48 @@
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.image import MIMEImage
+
+# Create a multipart message container
+msg = MIMEMultipart('related')
+msg['Subject'] = 'HTML Email with Embedded Image'
+msg['From'] = 'maskertask@gmail.com'
+msg['To'] = 'maskertask@gmail.com'
+# daniel.oliva@laverne.edu
+# Create HTML content with embedded image
+html = """
+
+
+
+Graphs of this week's infornation!
+
+
+
+
+"""
+# Attach HTML content to the email
+msg.attach(MIMEText(html, 'html'))
+# Open the image file
+with open('C:/Users/16267/PycharmProjects/pythonProject/.venv/Scripts/pie.png', 'rb') as f:
+    # Create an image MIME type
+    image = MIMEImage(f.read())
+    # Define the image ID to be used in the HTML content
+    image.add_header('Content-ID', '')
+    # Attach the image to the email
+    msg.attach(image)
+with open('C:/Users/16267/PycharmProjects/pythonProject/.venv/Scripts/bar.png', 'rb') as f:
+    # Create an image MIME type
+    image = MIMEImage(f.read())
+    # Define the image ID to be used in the HTML content
+    image.add_header('Content-ID', '')
+    # Attach the image to the email
+    msg.attach(image)
+# Connect to the SMTP server and send the email
+smtp_server = 'smtp.gmail.com'
+smtp_port = 587
+smtp_username = 'maskertask@gmail.com'
+smtp_password = 'ikwt ddvv ykmy zwzp'
+with smtplib.SMTP(smtp_server, smtp_port) as server:
+    server.starttls()
+    server.login(smtp_username, smtp_password)
+    server.send_message(msg)
