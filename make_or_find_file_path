@@ -1,0 +1,19 @@
+#run to find file path where graph was saved
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+df = pd.DataFrame({"x":np.arange(5),"y":np.random.rand(5)})
+
+df.plot().legend(loc='center left', bbox_to_anchor=(1, 0.5))
+
+fname="label.png"
+save_results_to = 'C:/Your/Path/To/Output'
+plt.savefig(save_results_to + fname, bbox_inches="tight")
+plt.close("all")
+import os
+if os.path.exists(fname):
+    print(os.path.abspath(fname))
+else:
+    print("file not found")
