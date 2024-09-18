@@ -1,0 +1,19 @@
+import pandas as pd
+import pyodbc
+
+excel_file_path = 'C:/Users/16267/Desktop/Distance_measurements.xlsx'
+df = pd.read_excel(excel_file_path)
+
+conn_str = (
+    r'DRIVER={SQL Server};'
+    r'SERVER=DESKTOP-QJMLC65;'
+    r'DATABASE=MakerSpace;'
+    r'TrustServerCertificate=True;'
+    r'UID=testtwo;'
+    r'PWD=test'
+)
+conn = pyodbc.connect(conn_str)
+cursor = conn.cursor()
+df.to_sql('EPL_LOG', conn, if_exists='append', index=False)
+cursor.close()
+conn.close()
